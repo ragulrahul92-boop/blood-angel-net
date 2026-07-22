@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Donor – LifeLink</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo"><i class="fa-solid fa-droplet"></i><span>LifeLink</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="search-donor.html" class="active">Find Donor</a>
+        <a href="request.html">Request Blood</a>
+        <a href="login.html">Login</a>
+      </nav>
+      <button class="nav-toggle"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <main class="dash-wrap">
+    <div class="dash-head">
+      <div>
+        <h1>Find a Donor</h1>
+        <p>Filter by blood group and city to find matching donors.</p>
+      </div>
+      <div>
+        <span id="resultCount" style="color:var(--muted);font-size:0.9rem;"></span>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="form-group">
+        <label>Blood Group</label>
+        <select id="filterBlood">
+          <option value="">All</option>
+          <option>A+</option><option>A-</option>
+          <option>B+</option><option>B-</option>
+          <option>O+</option><option>O-</option>
+          <option>AB+</option><option>AB-</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>City</label>
+        <input type="text" id="filterCity" placeholder="Any city" />
+      </div>
+      <button id="clearFilters" class="btn btn-outline btn-sm"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+    </div>
+
+    <div class="donor-grid" id="donorGrid"></div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    const grid = document.getElementById('donorGrid');
+    const filterBlood = document.getElementById('filterBlood');
+    const filterCity = document.getElementById('filterCity');
+    const resultCount = document.getElementById('resultCount');
+
+    function initials(name) {
+      return name.split(' ').map(n => n[0]).slice(0,2).join('').toUpperCase();
+    }
+
+    function render() {
+      const bg = filterBlood.value;
+      const city = filterCity.value.trim().toLowerCase();
+      const donors = DB.get(LS_KEYS.DONORS, []).filter(d => {
+        if (bg && d.bloodGroup !== bg) return false;
+        if (city && !d.city.toLowerCase().includes(city)) return false;
+        return true;
+      });
+
+      resultCount.textContent = `${donors.length} donor${donors.length===1?'':'s'} found`;
+
+      if (donors.length === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fa-solid fa-user-slash"></i><p>No donors match your filters.</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = donors.map(d => `
+        <div class="donor-card">
+          <div class="donor-top">
+            <div class="donor-avatar">${initials(d.name)}</div>
+            <div class="donor-blood">${d.bloodGroup}</div>
+          </div>
+          <h3 class="donor-name">${d.name}</h3>
+          <div class="donor-meta">
+            <div><i class="fa-solid fa-location-dot"></i> ${d.city}</div>
+            <div><i class="fa-solid fa-phone"></i> ${d.phone}</div>
+          </div>
+          <div class="availability ${d.available ? 'yes' : 'no'}">
+            ${d.available ? 'Available now' : 'Unavailable'}
+          </div>
+          <a href="request.html?donor=${d.id}" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">
+            <i class="fa-solid fa-hand-holding-droplet"></i> Request Blood
+          </a>
+        </div>
+      `).join('');
+    }
+
+    filterBlood.addEventListener('change', render);
+    filterCity.addEventListener('input', render);
+    document.getElementById('clearFilters').addEventListener('click', () => {
+      filterBlood.value = '';
+      filterCity.value = '';
+      render();
+    });
+    render();
+  </script>
+</body>
+</html>

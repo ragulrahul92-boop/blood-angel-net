@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Blood – LifeLink</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo"><i class="fa-solid fa-droplet"></i><span>LifeLink</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="search-donor.html">Find Donor</a>
+        <a href="request.html" class="active">Request Blood</a>
+        <a href="login.html">Login</a>
+      </nav>
+      <button class="nav-toggle"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <main class="auth-wrap">
+    <div class="auth-card wide">
+      <div class="auth-head">
+        <div class="logo"><i class="fa-solid fa-truck-medical"></i><span>Blood Request</span></div>
+        <h1>Post a Blood Request</h1>
+        <p>Verified donors will be able to see and respond.</p>
+      </div>
+
+      <div class="alert success" id="success"></div>
+
+      <form id="requestForm">
+        <div class="form-group">
+          <label>Patient Name</label>
+          <input type="text" id="patientName" required placeholder="Full name" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Blood Group</label>
+            <select id="bloodGroup" required>
+              <option value="">Select</option>
+              <option>A+</option><option>A-</option>
+              <option>B+</option><option>B-</option>
+              <option>O+</option><option>O-</option>
+              <option>AB+</option><option>AB-</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Units Required</label>
+            <input type="number" id="units" required min="1" max="20" value="1" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Hospital</label>
+          <input type="text" id="hospital" required placeholder="Hospital name" />
+        </div>
+
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" id="city" required placeholder="City" />
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-wrap">
+            <input type="checkbox" id="emergency" />
+            <label for="emergency"><i class="fa-solid fa-triangle-exclamation" style="color:var(--primary);"></i> Mark as Emergency (urgent)</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit">
+          <i class="fa-solid fa-paper-plane"></i> Submit Request
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Prefill from session
+    const session = DB.get(LS_KEYS.SESSION, null);
+    if (session && session.role === 'patient') {
+      const p = DB.get(LS_KEYS.PATIENTS, []).find(x => x.id === session.refId);
+      if (p) {
+        document.getElementById('patientName').value = p.name;
+        document.getElementById('bloodGroup').value = p.bloodGroup;
+        document.getElementById('city').value = p.city;
+      }
+    }
+
+    document.getElementById('requestForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const req = {
+        id: 'r' + Date.now(),
+        patientName: document.getElementById('patientName').value.trim(),
+        bloodGroup: document.getElementById('bloodGroup').value,
+        units: Number(document.getElementById('units').value),
+        hospital: document.getElementById('hospital').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        emergency: document.getElementById('emergency').checked,
+        patientId: session?.refId || null,
+        createdAt: Date.now(),
+      };
+      DB.push(LS_KEYS.REQUESTS, req);
+      const s = document.getElementById('success');
+      s.innerHTML = '<i class="fa-solid fa-circle-check"></i> Request submitted successfully! Donors will be notified.';
+      s.className = 'alert success show';
+      e.target.reset();
+      setTimeout(() => {
+        if (session?.role === 'patient') window.location.href = 'patient-dashboard.html';
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
