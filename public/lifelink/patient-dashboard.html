@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Dashboard – LifeLink</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo"><i class="fa-solid fa-droplet"></i><span>LifeLink</span></a>
+      <nav class="nav-links">
+        <a href="patient-dashboard.html" class="active">Dashboard</a>
+        <a href="search-donor.html">Find Donor</a>
+        <a href="request.html">New Request</a>
+        <button id="logoutBtn" class="btn btn-outline btn-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+      </nav>
+      <button class="nav-toggle"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <main class="dash-wrap">
+    <div class="welcome-card">
+      <div>
+        <h2>Hello, <span id="patientName">Patient</span></h2>
+        <p>Find donors quickly or post an emergency request.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="search-donor.html" class="btn" style="background:rgba(255,255,255,0.2);color:var(--white);"><i class="fa-solid fa-magnifying-glass"></i> Search Donor</a>
+        <a href="request.html" class="btn" style="background:var(--white);color:var(--primary);"><i class="fa-solid fa-plus"></i> New Request</a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2><i class="fa-solid fa-clipboard-list" style="color:var(--primary);margin-right:6px;"></i>My Requests</h2>
+        <a href="request.html" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> New</a>
+      </div>
+      <div id="myRequests"></div>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/patient.js"></script>
+</body>
+</html>

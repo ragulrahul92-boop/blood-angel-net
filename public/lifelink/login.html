@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – LifeLink</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo"><i class="fa-solid fa-droplet"></i><span>LifeLink</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="search-donor.html">Find Donor</a>
+        <a href="request.html">Request Blood</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Register</a>
+      </nav>
+      <button class="nav-toggle"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <main class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-head">
+        <div class="logo"><i class="fa-solid fa-droplet"></i><span>LifeLink</span></div>
+        <h1>Welcome back</h1>
+        <p>Sign in to continue saving lives</p>
+      </div>
+
+      <div class="alert error" id="alert"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="••••••••" />
+        </div>
+
+        <label style="display:block;font-size:0.88rem;font-weight:500;margin-bottom:8px;">I am a</label>
+        <div class="role-group">
+          <div class="role-option">
+            <input type="radio" name="role" value="donor" id="r-donor" checked />
+            <label for="r-donor"><i class="fa-solid fa-hand-holding-droplet"></i>Donor</label>
+          </div>
+          <div class="role-option">
+            <input type="radio" name="role" value="patient" id="r-patient" />
+            <label for="r-patient"><i class="fa-solid fa-user-injured"></i>Patient</label>
+          </div>
+          <div class="role-option">
+            <input type="radio" name="role" value="admin" id="r-admin" />
+            <label for="r-admin"><i class="fa-solid fa-user-shield"></i>Admin</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit">
+          <i class="fa-solid fa-right-to-bracket"></i> Login
+        </button>
+      </form>
+
+      <p class="auth-foot">Don't have an account? <a href="register.html">Register</a></p>
+
+      <div class="demo-hint">
+        <strong>Demo accounts:</strong><br>
+        Donor: rahul@demo.com / demo123<br>
+        Patient: amit@demo.com / demo123<br>
+        Admin: admin@lifelink.com / admin123
+      </div>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const role = document.querySelector('input[name="role"]:checked').value;
+      const alertEl = document.getElementById('alert');
+
+      const users = DB.get(LS_KEYS.USERS, []);
+      const user = users.find(u => u.email.toLowerCase() === email && u.password === password && u.role === role);
+
+      if (!user) {
+        alertEl.textContent = 'Invalid credentials or role mismatch.';
+        alertEl.className = 'alert error show';
+        return;
+      }
+
+      DB.set(LS_KEYS.SESSION, user);
+      if (role === 'donor') window.location.href = 'donor-dashboard.html';
+      else if (role === 'patient') window.location.href = 'patient-dashboard.html';
+      else window.location.href = 'admin.html';
+    });
+  </script>
+</body>
+</html>

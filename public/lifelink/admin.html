@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – LifeLink</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo"><i class="fa-solid fa-droplet"></i><span>LifeLink</span></a>
+      <nav class="nav-links">
+        <a href="admin.html" class="active">Admin</a>
+        <button id="logoutBtn" class="btn btn-outline btn-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+      </nav>
+      <button class="nav-toggle"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <main class="dash-wrap">
+    <div class="dash-head">
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p>Manage donors, patients, and blood requests.</p>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-hand-holding-droplet"></i></div>
+        <div class="stat-info"><strong id="statDonors">0</strong><span>Total Donors</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-user-injured"></i></div>
+        <div class="stat-info"><strong id="statPatients">0</strong><span>Total Patients</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+        <div class="stat-info"><strong id="statRequests">0</strong><span>Total Requests</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="donors">Donors</button>
+        <button class="tab-btn" data-tab="patients">Patients</button>
+        <button class="tab-btn" data-tab="requests">Requests</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-donors">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Blood</th><th>City</th><th>Phone</th><th>Status</th><th></th></tr></thead>
+            <tbody id="donorTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-patients">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Blood</th><th>City</th><th>Phone</th><th>Email</th><th></th></tr></thead>
+            <tbody id="patientTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-requests">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Patient</th><th>Blood</th><th>Hospital</th><th>Units</th><th>Priority</th><th></th></tr></thead>
+            <tbody id="requestTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
